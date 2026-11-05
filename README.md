@@ -1,8 +1,8 @@
 # Konverter
 
-**Бесплатный офлайн-конвертер файлов с «колесом форматов» для macOS и Windows.**
+**Free offline file converter with a radial "format wheel" for macOS and Windows.**
 
-Начните перетаскивать файл, зажмите клавишу, и вокруг курсора появится колесо: бросьте файл на нужный сегмент. Результат появится рядом с оригиналом. Всё работает без интернета.
+Start dragging a file, hold a modifier key, and a wheel appears around the cursor. Drop the file on a segment and the result is saved next to the original. Everything works offline.
 
 ![Platform](https://img.shields.io/badge/macOS-14%2B-black?logo=apple)
 ![Platform](https://img.shields.io/badge/Windows-10%20%2F%2011-0078D6?logo=windows)
@@ -10,53 +10,53 @@
 ![Electron](https://img.shields.io/badge/Electron-47848F?logo=electron&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-## Возможности
+## Features
 
-| Колесо | macOS | Windows | Что делает |
+| Wheel | macOS | Windows | What it does |
 |---|---|---|---|
-| Форматы | `Shift` | `Shift` | Конвертация фото, видео, аудио и документов в нужный формат |
-| Инструменты | `Command` | `Alt` | Обрезать, сжать, склеить, кадры, водяной знак, пароль для PDF, текст с фото (OCR) |
-| Действия | `Control` | `Ctrl` | Копия, путь, ZIP, переименовать, AirDrop, почта |
+| Formats | `Shift` | `Shift` | Convert images, video, audio and documents to another format |
+| Tools | `Command` | `Alt` | Trim, compress, merge, extract frames, watermark, PDF password, text from image (OCR) |
+| Actions | `Control` | `Ctrl` | Duplicate, copy path, ZIP, rename, AirDrop, email |
 
-**Нейросети работают локально:**
-- **ИИ-увеличение** фото (×2, ×4, ×8) и видео (×2, ×4) на Real-ESRGAN
-- **Удаление фона** с фото
-- **Субтитры и расшифровка речи** в SRT или TXT на whisper.cpp
+**On-device AI:**
+- **AI upscaling** for images (×2, ×4, ×8) and video (×2, ×4) with Real-ESRGAN
+- **Background removal** for images
+- **Subtitles and speech-to-text** (SRT or TXT) with whisper.cpp
 
-**Также:**
-- Сжатие под Telegram, WhatsApp, Instagram, почту или до нужного размера
-- Обработка звука: выровнять громкость, убрать шум или тишину, изменить скорость
-- Папки с автоконвертацией: новый файл в папке сам конвертируется
-- Пакетная обработка: можно перетащить несколько файлов и папки сразу
+**Also:**
+- Compress for Telegram, WhatsApp, Instagram, email, or to a target size
+- Audio processing: normalize loudness, remove noise or silence, change speed
+- Watch folders: new files are converted automatically
+- Batch processing: drag multiple files and folders at once
 
-## Структура
+## Project structure
 
 ```
-macos/     — нативное приложение на Swift / SwiftUI (Swift Package)
-windows/   — приложение на Electron (Node.js)
+macos/     — native app in Swift / SwiftUI (Swift Package)
+windows/   — Electron app (Node.js)
 ```
 
-## Сборка
+## Building
 
 ### macOS
-Нужны macOS 14+, Mac на Apple Silicon и Xcode или Command Line Tools.
+Requires macOS 14+, Apple Silicon, and Xcode or Command Line Tools.
 ```bash
 cd macos
-bash install.command    # соберёт и установит в «Программы»
+bash install.command    # builds and installs into /Applications
 ```
-Для документов, таблиц и EPUB: `brew install --cask libreoffice`.
-Для субтитров: `brew install whisper-cpp`.
+For office documents, spreadsheets and EPUB: `brew install --cask libreoffice`.
+For subtitles: `brew install whisper-cpp`.
 
 ### Windows
-Нужны Node.js 20+ и Windows 10/11 x64.
+Requires Node.js 20+ and Windows 10/11 x64.
 ```bash
 cd windows
 npm install
-npm start          # запуск
-npm run dist       # сборка установщика (electron-builder)
+npm start          # run the app
+npm run dist       # build the installer (electron-builder)
 ```
-Модели Real-ESRGAN и whisper, а также qpdf не входят в репозиторий из-за размера: их кладут в `windows/assets/` перед сборкой. Подробнее в [windows/README-Windows.txt](windows/README-Windows.txt).
+The Real-ESRGAN and whisper models and qpdf are not included in the repository because of their size. Put them in `windows/assets/` before building. See [windows/README-Windows.txt](windows/README-Windows.txt) for details (in Russian).
 
-## Лицензия
+## License
 
 [MIT](LICENSE) © 2026 Bakhtiyor Sattorov
