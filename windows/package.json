@@ -1,0 +1,60 @@
+{
+  "name": "konverter-windows",
+  "productName": "Konverter",
+  "version": "1.1.0",
+  "description": "Бесплатный офлайн-конвертер файлов с колесом форматов",
+  "main": "main.js",
+  "author": "Konverter",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis zip --x64"
+  },
+  "dependencies": {
+    "@tesseract.js-data/eng": "^1.0.0",
+    "@tesseract.js-data/rus": "^1.0.0",
+    "ffmpeg-static": "^5.2.0",
+    "heic-convert": "^2.1.0",
+    "mammoth": "^1.8.0",
+    "onnxruntime-node": "1.20.1",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1",
+    "sharp": "^0.33.5",
+    "tesseract.js": "^5.1.1",
+    "uiohook-napi": "^1.5.4"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "local.konverter",
+    "productName": "Konverter",
+    "asar": false,
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "assets/icon.png",
+      "signAndEditExecutable": false,
+      "target": [
+        "zip",
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false
+    },
+    "electronVersion": "33.2.1",
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json",
+      "src/**/*",
+      "renderer/**/*",
+      "assets/**/*",
+      "node_modules/**/*"
+    ]
+  }
+}

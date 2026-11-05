@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<link rel="stylesheet" href="style.css">
+<style>
+  html, body { height: auto; }
+  body { background: #2a2a2e; border: 1px solid #4a4a52; padding: 18px 20px 16px; overflow: hidden; }
+  h1 { font-size: 15px; font-weight: 600; margin: 0 0 6px; }
+  p { margin: 0 0 12px; font-size: 12px; color: var(--sub); white-space: pre-wrap; }
+  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .row label { width: 64px; color: var(--sub); }
+  .row input { flex: 1; min-width: 0; }
+  .buttons { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+  .buttons.vertical { flex-direction: column; }
+  .buttons.vertical button { width: 100%; }
+</style></head>
+<body>
+<h1 id="title"></h1><p id="msg"></p><div id="fields"></div><div class="buttons" id="buttons"></div>
+<script>
+  const $ = (id) => document.getElementById(id);
+  let inputs = [];
+  const finish = (button) => {
+    if (button === null) return window.api.dialogDone(null);
+    window.api.dialogDone({ button, values: inputs.map((i) => i.value) });
+  };
+  window.api.onDialog((cfg) => {
+    $('title').textContent = cfg.title;
+    $('msg').textContent = cfg.message || '';
+    $('msg').hidden = !cfg.message;
+    for (const f of cfg.fields || []) {
+      const row = document.createElement('div'); row.className = 'row';
+      if (f.label) { const l = document.createElement('label'); l.textContent = f.label; row.appendChild(l); }
+      const inp = document.createElement('input');
+      inp.type = f.secure ? 'password' : 'text'; inp.value = f.value || '';
+      row.appendChild(inp); inputs.push(inp); $('fields').appendChild(row);
+    }
+    const box = $('buttons');
+    if (cfg.vertical) box.classList.add('vertical');
+    const mk = (text, cb, primary) => {
+      const b = document.createElement('button'); b.className = 'btn' + (primary ? ' primary' : ''); b.textContent = text; b.onclick = cb; return b;
+    };
+    const actions = (cfg.buttons || []).map((t, i) => mk(t, () => finish(i), i === 0 && !cfg.vertical));
+    const cancel = mk('Отмена', () => finish(null), false);
+    if (cfg.vertical) { actions.forEach((b) => box.appendChild(b)); box.appendChild(cancel); }
+    else { box.appendChild(cancel); actions.forEach((b) => box.appendChild(b)); }
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') finish(null);
+      if (e.key === 'Enter' && !cfg.vertical) finish(0);
+    });
+    window.api.dialogReady(document.body.offsetHeight);
+    if (inputs[0]) { inputs[0].focus(); inputs[0].select(); }
+  });
+</script></body></html>

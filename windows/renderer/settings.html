@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>Настройки</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { display: flex; flex-direction: column; }
+  nav { display: flex; gap: 6px; padding: 14px 20px 0; border-bottom: 1px solid var(--line); }
+  nav button { background: none; border: 0; border-bottom: 3px solid transparent; padding: 8px 12px; color: var(--sub); font-weight: 600; cursor: pointer; }
+  nav button.on { color: var(--text); border-bottom-color: var(--acc); }
+  main { flex: 1; overflow-y: auto; padding: 16px 20px 24px; }
+  section { display: none; } section.on { display: block; }
+  h3 { margin: 18px 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--sub); }
+  h3:first-child { margin-top: 0; }
+  .line { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .line select { min-width: 190px; }
+  .note { font-size: 12px; color: var(--sub); margin: 6px 0; } .warn { color: var(--err); }
+  .folder { color: var(--sub); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  input[type=checkbox] { width: 18px; height: 18px; accent-color: #ff8a2b; }
+  input[type=range] { accent-color: #ff8a2b; width: 190px; }
+  ul.wheel { list-style: none; margin: 10px 0; padding: 0; }
+  ul.wheel li { display: flex; align-items: center; gap: 10px; padding: 7px 10px; background: var(--card); border-radius: 8px; margin-bottom: 6px; }
+  ul.wheel li b { flex: 1; }
+  .rule { background: var(--card); border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
+  .rule .head { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-weight: 600; }
+  .rule .head span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rule .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin-top: 8px; }
+  .rule label { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--sub); }
+  .rule select { min-width: 90px; }
+  ul.wheel button { background: none; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; width: 28px; height: 26px; }
+</style></head>
+<body>
+<nav><button class="on" data-tab="general">Основные</button><button data-tab="quality">Качество</button><button data-tab="wheel">Колесо форматов</button><button data-tab="folders">Папки</button></nav>
+<main>
+<section id="general" class="on">
+  <h3>Кнопки для колёс (нажми во время перетаскивания файла)</h3>
+  <div class="line"><span>Смена формата</span><select data-key="modConvert" class="mod"></select></div>
+  <div class="line"><span>Инструменты</span><select data-key="modTools" class="mod"></select></div>
+  <div class="line"><span>Действия</span><select data-key="modActions" class="mod"></select></div>
+  <div class="note warn" id="dup" hidden>Одна и та же кнопка выбрана для двух колёс: сработает только первое.</div>
+  <h3>Куда сохранять</h3>
+  <div class="line"><span>Результат</span><select data-key="saveMode" data-type="int">
+    <option value="0">Рядом с оригиналом</option><option value="1">В подпапку Converted</option><option value="2">В выбранную папку</option></select></div>
+  <div class="line" id="folderLine" hidden><span class="folder" id="folderText"></span><button class="btn" id="pick">Выбрать…</button></div>
+  <div class="line"><span>После конвертации переносить оригинал в корзину</span><input type="checkbox" data-key="trashOriginal"></div>
+  <h3>Система</h3>
+  <div class="line"><span>Запускать при входе в Windows</span><input type="checkbox" data-key="autostart"></div>
+  <div class="line"><span>Уведомления</span><input type="checkbox" data-key="notify"></div>
+  <div class="line"><span>Звук по завершении</span><input type="checkbox" data-key="sound"></div>
+  <div class="line"><span>Пункт «Конвертер…» в правом клике Проводника</span><input type="checkbox" data-key="contextMenu"></div>
+  <div class="note">В Windows 11 пункт находится в «Показать дополнительные параметры».</div>
+</section>
+<section id="quality">
+  <h3>Фото</h3>
+  <div class="line"><span>Качество JPG, WEBP, AVIF: <b id="qv"></b>%</span><input type="range" min="40" max="100" step="5" data-key="imageQuality" data-type="int"></div>
+  <div class="line"><span>Максимальная сторона</span><select data-key="imageMaxSide" data-type="int">
+    <option value="0">Как у оригинала</option><option value="4096">4096 px</option><option value="2560">2560 px</option>
+    <option value="1920">1920 px</option><option value="1280">1280 px</option><option value="1024">1024 px</option></select></div>
+  <h3>Музыка</h3>
+  <div class="line"><span>Битрейт MP3, M4A, OGG, OPUS</span><select data-key="audioBitrate" data-type="int">
+    <option value="128">128 кбит/с</option><option value="160">160 кбит/с</option><option value="192">192 кбит/с</option>
+    <option value="256">256 кбит/с</option><option value="320">320 кбит/с</option></select></div>
+  <h3>Видео</h3>
+  <div class="line"><span>Качество</span><select data-key="videoQuality" data-type="int">
+    <option value="0">Высокое (файл больше)</option><option value="1">Среднее</option><option value="2">Малое (файл меньше)</option></select></div>
+  <div class="line"><span>Максимальная высота</span><select data-key="videoMaxHeight" data-type="int">
+    <option value="0">Как у оригинала</option><option value="2160">2160 px (4K)</option><option value="1440">1440 px</option>
+    <option value="1080">1080 px</option><option value="720">720 px</option><option value="480">480 px</option></select></div>
+</section>
+<section id="folders">
+  <div class="line"><span>Следить за папками</span><input type="checkbox" data-key="watchEnabled"></div>
+  <div class="note">Новый файл, который появится в выбранной папке, сам превратится в нужный формат. Результат попадёт в подпапку «Готово», оригинал останется. Файлы, которые уже лежали в папке, не трогаются.</div>
+  <div id="rules"></div>
+  <button class="btn" id="addFolder">Добавить папку…</button>
+</section>
+<section id="wheel">
+  <div class="line"><span>Тип файла</span><select id="kind"></select></div>
+  <div class="note">Галочка значит «показывать на колесе». Стрелками меняй порядок: верхние идут первыми.</div>
+  <ul class="wheel" id="wheelList"></ul>
+  <button class="btn" id="reset">Сбросить</button>
+</section>
+</main>
+<script>
+const $ = (s) => document.querySelector(s);
+let P = {}, KINDS = {}, order = [], hidden = [];
+
+document.querySelectorAll('nav button').forEach((b) => b.onclick = () => {
+  document.querySelectorAll('nav button, section').forEach((e) => e.classList.remove('on'));
+  b.classList.add('on'); $('#' + b.dataset.tab).classList.add('on');
+});
+
+function dupCheck() {
+  const used = [P.modConvert, P.modTools, P.modActions].filter((v) => v !== 'off');
+  $('#dup').hidden = new Set(used).size === used.length;
+}
+function syncUi() {
+  $('#folderLine').hidden = Number(P.saveMode) !== 2;
+  $('#folderText').textContent = P.outputFolder || 'Папка не выбрана';
+  $('#qv').textContent = P.imageQuality;
+  dupCheck();
+}
+
+async function save(key, value) { P[key] = value; await window.api.setPrefs({ [key]: value }); syncUi(); }
+
+async function loadWheel() {
+  const s = await window.api.wheelState($('#kind').value);
+  order = s.order; hidden = s.hidden; drawWheel();
+}
+function drawWheel() {
+  const ul = $('#wheelList'); ul.innerHTML = '';
+  order.forEach((f, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<input type="checkbox" ${hidden.includes(f) ? '' : 'checked'}><b>${f.toUpperCase()}</b><button>↑</button><button>↓</button>`;
+    const [cb, , up, down] = li.children;
+    cb.onchange = () => { hidden = cb.checked ? hidden.filter((x) => x !== f) : [...hidden, f]; persist(); };
+    up.onclick = () => { if (i > 0) { [order[i - 1], order[i]] = [order[i], order[i - 1]]; persist(); drawWheel(); } };
+    down.onclick = () => { if (i < order.length - 1) { [order[i + 1], order[i]] = [order[i], order[i + 1]]; persist(); drawWheel(); } };
+    ul.appendChild(li);
+  });
+}
+const persist = () => window.api.saveWheel($('#kind').value, order, hidden);
+
+(async () => {
+  P = await window.api.prefs();
+  KINDS = (await window.api.formats()).KINDS;
+  document.querySelectorAll('.mod').forEach((s) => {
+    s.innerHTML = '<option value="shift">Shift</option><option value="ctrl">Ctrl</option><option value="alt">Alt</option><option value="off">Выключено</option>';
+  });
+  document.querySelectorAll('[data-key]').forEach((el) => {
+    const key = el.dataset.key;
+    if (el.type === 'checkbox') { el.checked = !!P[key]; el.onchange = () => save(key, el.checked); }
+    else {
+      el.value = P[key];
+      el.oninput = el.onchange = () => save(key, el.dataset.type === 'int' ? Number(el.value) : el.value);
+    }
+  });
+  $('#pick').onclick = async () => { const f = await window.api.pickFolder(); if (f) save('outputFolder', f); };
+  $('#kind').innerHTML = Object.keys(KINDS).map((k) => `<option value="${k}">${KINDS[k].title}</option>`).join('');
+  $('#kind').onchange = loadWheel;
+  $('#reset').onclick = async () => { const s = await window.api.resetWheel($('#kind').value); order = s.order; hidden = s.hidden; drawWheel(); };
+  // папки-наблюдатели
+  const KIND_NAMES = { image: 'Фото в', audio: 'Музыка в', video: 'Видео в', doc: 'Документы в' };
+  let rules = P.watchFolders || [];
+  const saveRules = () => window.api.setPrefs({ watchFolders: rules });
+  function renderRules() {
+    const box = $('#rules'); box.innerHTML = '';
+    rules.forEach((r, i) => {
+      const div = document.createElement('div'); div.className = 'rule';
+      const sels = Object.keys(KIND_NAMES).map((k) => {
+        const opts = '<option value="">ничего</option>' + KINDS[k].out.map((f) => `<option value="${f}" ${r[k] === f ? 'selected' : ''}>${f.toUpperCase()}</option>`).join('');
+        return `<label>${KIND_NAMES[k]}<select data-k="${k}">${opts}</select></label>`;
+      }).join('');
+      div.innerHTML = `<div class="head"><span title="${r.path}">${r.path}</span><button class="btn">Убрать</button></div><div class="grid">${sels}</div>`;
+      div.querySelector('button').onclick = () => { rules.splice(i, 1); saveRules(); renderRules(); };
+      div.querySelectorAll('select').forEach((s) => s.onchange = () => { r[s.dataset.k] = s.value; saveRules(); });
+      box.appendChild(div);
+    });
+  }
+  $('#addFolder').onclick = async () => {
+    const f = await window.api.pickFolder();
+    if (f && !rules.some((r) => r.path === f)) { rules.push({ path: f, image: 'jpg', audio: '', video: '', doc: '' }); saveRules(); renderRules(); }
+  };
+  renderRules();
+  syncUi(); loadWheel();
+})();
+</script></body></html>
