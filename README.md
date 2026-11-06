@@ -10,6 +10,8 @@ Start dragging a file, hold a modifier key, and a wheel appears around the curso
 ![Electron](https://img.shields.io/badge/Electron-47848F?logo=electron&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+**[⬇️ Download the latest release](https://github.com/Sattorov-stack/konverter/releases/latest)** for macOS (Apple Silicon) and Windows (x64).
+
 ## Features
 
 | Wheel | macOS | Windows | What it does |
