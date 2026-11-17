@@ -60,8 +60,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var activity: NSObjectProtocol?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // не даём macOS «усыплять» приложение, пока оно следит за перетаскиванием
-        activity = ProcessInfo.processInfo.beginActivity(options: [.userInitiated], reason: "Отслеживание перетаскивания файлов")
+        // не даём macOS «усыплять» приложение (App Nap), пока оно следит за перетаскиванием,
+        // но разрешаем Маку засыпать: .userInitiated запрещал сон системы и грел ноутбук
+        activity = ProcessInfo.processInfo.beginActivity(options: [.userInitiatedAllowingIdleSystemSleep], reason: "Отслеживание перетаскивания файлов")
         Notifier.setup()
         watcher = DragWatcher()
         watcher?.start()
